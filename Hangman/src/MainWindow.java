@@ -117,6 +117,7 @@ public class MainWindow extends JFrame {
 		this.setVisible(true);
 	}
 	
+	
 	public static void main(String[] args) {
 		new MainWindow("cat");
 	}
