@@ -13,6 +13,7 @@ public class HangmanFigure extends JPanel {
 		guesses = 0;
 		setPreferredSize(new Dimension(300, 300));
 		setOpaque(true);
+		System.out.println("lamo");
 	}
 	
 	public void paintComponent(Graphics g) {
