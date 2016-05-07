@@ -49,7 +49,6 @@ public class MainMenu extends JFrame implements ActionListener, WindowListener {
 			this.setTitle("Main menu");
 			this.setSize(img.getWidth(),img.getHeight());
 			this.setLocationRelativeTo(null);
-
 			this.setVisible(true);
 		}
 	}
