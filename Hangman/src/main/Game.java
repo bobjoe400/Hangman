@@ -145,7 +145,7 @@ public class Game extends JFrame implements ActionListener, WindowListener{
 			inGame = false;
 		}
 		if (e.getSource() == fileItems.get(1)) {
-			this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSED));
+			this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		}
 		Main.checkVisible(this, diff, inGame);
 	}
