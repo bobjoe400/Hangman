@@ -17,17 +17,17 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-public class Game extends JFrame implements ActionListener, WindowListener{
-	
+public class Game extends JFrame implements ActionListener, WindowListener {
+
 	private ArrayList<JMenuItem> fileItems;
-	
+
 	private int remainingGuesses;
 	private int diff;
 	private boolean inGame;
 	private String wrongGuesses;
 	private String word;
 	private String visible;
-	
+
 	public Game(String toGuess, int difficulty) {
 
 		this.addWindowListener(this);
@@ -153,13 +153,13 @@ public class Game extends JFrame implements ActionListener, WindowListener{
 	@Override
 	public void windowActivated(WindowEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowClosed(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -171,24 +171,24 @@ public class Game extends JFrame implements ActionListener, WindowListener{
 	@Override
 	public void windowDeactivated(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowIconified(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

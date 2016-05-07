@@ -11,16 +11,16 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-public class Menu extends JFrame implements ActionListener, WindowListener {
+public class MainMenu extends JFrame implements ActionListener, WindowListener {
 
 	private ArrayList<JMenuItem> diffs;
 	private int diff;
 	private boolean inGame;
 
-	public Menu() {
-		
+	public MainMenu() {
+
 		this.addWindowListener(this);
-		
+
 		diffs = new ArrayList<JMenuItem>();
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu1 = new JMenu("Difficulty");
@@ -35,6 +35,7 @@ public class Menu extends JFrame implements ActionListener, WindowListener {
 		this.setJMenuBar(menuBar);
 		this.setTitle("Main menu");
 		this.setSize(300, 300);
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
 
@@ -54,7 +55,7 @@ public class Menu extends JFrame implements ActionListener, WindowListener {
 			diff = 2;
 			inGame = true;
 		}
-		Main.checkVisible(this,diff,inGame);
+		Main.checkVisible(this, diff, inGame);
 	}
 
 	@Override
@@ -66,7 +67,7 @@ public class Menu extends JFrame implements ActionListener, WindowListener {
 	@Override
 	public void windowClosed(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

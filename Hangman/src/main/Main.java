@@ -24,24 +24,23 @@ public class Main {
 			}
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		Thread music = new Thread(new MusicThread());
 		music.start();
-		new Menu();
+		new MainMenu();
 	}
 
 	public static void checkVisible(JFrame f, int diff, boolean inGame) {
 		if (f instanceof Game && !inGame) {
 			f.dispose();
-			new Menu();
-		} else if (f instanceof Menu && inGame) {
+			new MainMenu();
+		} else if (f instanceof MainMenu && inGame) {
 			f.dispose();
 			new Game("cat", diff);
 		} else {
 			f.setVisible(true);
 		}
 	}
-
 
 }
