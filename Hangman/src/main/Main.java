@@ -1,11 +1,14 @@
 package main;
 
+import java.awt.Graphics;
+import java.awt.Image;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 public class Main {
@@ -42,5 +45,16 @@ public class Main {
 			f.setVisible(true);
 		}
 	}
-
+	
+	static class ImagePanel extends JComponent {
+	    private Image image;
+	    public ImagePanel(Image image) {
+	        this.image = image;
+	    }
+	    @Override
+	    protected void paintComponent(Graphics g) {
+	        super.paintComponent(g);
+	        g.drawImage(image, 0, 0, this);
+	    }
+	}
 }

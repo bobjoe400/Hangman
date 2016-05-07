@@ -4,8 +4,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -18,7 +22,6 @@ public class MainMenu extends JFrame implements ActionListener, WindowListener {
 	private boolean inGame;
 
 	public MainMenu() {
-
 		this.addWindowListener(this);
 
 		diffs = new ArrayList<JMenuItem>();
@@ -33,10 +36,22 @@ public class MainMenu extends JFrame implements ActionListener, WindowListener {
 		}
 		menuBar.add(menu1);
 		this.setJMenuBar(menuBar);
-		this.setTitle("Main menu");
-		this.setSize(300, 300);
-		this.setLocationRelativeTo(null);
-		this.setVisible(true);
+		
+		BufferedImage img = null;
+
+		try {
+			img = ImageIO.read(new File("Resources/menu.jpg"));
+			this.setContentPane(new Main.ImagePanel(img));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			
+			this.setTitle("Main menu");
+			this.setSize(img.getWidth(),img.getHeight());
+			this.setLocationRelativeTo(null);
+
+			this.setVisible(true);
+		}
 	}
 
 	public void actionPerformed(ActionEvent E) {
