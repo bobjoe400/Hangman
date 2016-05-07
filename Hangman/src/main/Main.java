@@ -10,9 +10,6 @@ import javax.swing.JFrame;
 
 public class Main {
 
-	private static boolean inGame;
-	private static boolean exit;
-
 	static class MusicThread implements Runnable {
 		public void run() {
 			try {
@@ -31,7 +28,6 @@ public class Main {
 	public static void main(String[] args) {
 		Thread music = new Thread(new MusicThread());
 		music.start();
-		inGame = false;
 		new Menu();
 	}
 
