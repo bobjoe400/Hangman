@@ -4,9 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -33,140 +31,131 @@ public class MainMenu extends JFrame implements ActionListener {
 
 	private ArrayList<JMenuItem> diffs;
 	private int diff;
-	private boolean inGame;
-	private final Integer bottom = JLayeredPane.DEFAULT_LAYER;
 
 	public MainMenu() {
 		super("Main Menu");
-		diffs = new ArrayList<JMenuItem>();
-		JMenuBar menuBar = new JMenuBar();
-		JMenu menu1 = new JMenu("Difficulty");
-		diffs.add(new JMenuItem("Easy"));
-		diffs.add(new JMenuItem("Medium"));
-		diffs.add(new JMenuItem("Hard"));
-		for (JMenuItem item : diffs) {
-			item.addActionListener(this);
-			menu1.add(item);
-		}
-		menuBar.add(menu1);
-		setJMenuBar(menuBar);
-		
+
 		setResizable(false);
-		
+
 		BufferedImage img = null;
 		try {
 			img = ImageIO.read(new File("Resources/menu.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		setLayout(new BorderLayout());
 		JLabel image = new JLabel(new ImageIcon(img));
-		image.setPreferredSize(new Dimension(600,600));
+		image.setSize(new Dimension(600, 600));
 		setContentPane(image);
-		setLayout(new FlowLayout());
-		JLayeredPane p1 = new JLayeredPane();
-		p1.setPreferredSize(new Dimension(600,600));
+		setLayout(new BorderLayout());
+		setPreferredSize(image.getSize());
+
+		JPanel p1 = new JPanel();
+		p1.setOpaque(false);
+		p1.setLayout(new BoxLayout(p1, BoxLayout.Y_AXIS));
+
 		JPanel buttons = new JPanel();
+		buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
 		buttons.setOpaque(false);
-		buttons.setSize(p1.getPreferredSize());
-		buttons.setLayout(new BoxLayout(buttons, BoxLayout.LINE_AXIS));
-		buttons.add(Box.createRigidArea(new Dimension(40,0)));
-		newButton("Easy",buttons);
-		buttons.add(Box.createHorizontalGlue());
-		newButton("Medium",buttons);
-		buttons.add(Box.createHorizontalGlue());
-		newButton("Hard",buttons);
-		buttons.add(Box.createRigidArea(new Dimension(40,0)));
-		buttons.add(Box.createRigidArea(new Dimension(0,15)));
-		p1.add(buttons, 1);
+		newButton("Instructions", buttons);
+
+		JPanel diffbuttons = new JPanel();
+		diffbuttons.setOpaque(false);
+		diffbuttons.setLayout(new BoxLayout(diffbuttons, BoxLayout.X_AXIS));
+		diffbuttons.add(Box.createHorizontalGlue());
+		newButton("Easy", diffbuttons);
+		diffbuttons.add(Box.createHorizontalGlue());
+		newButton("Medium", diffbuttons);
+		diffbuttons.add(Box.createHorizontalGlue());
+		newButton("Hard", diffbuttons);
+		diffbuttons.add(Box.createHorizontalGlue());
+		buttons.add(Box.createVerticalGlue());
+		buttons.add(diffbuttons);
+
+		JPanel instruc = new JPanel();
+		instruc.setOpaque(false);
+		instruc.setLayout(new BoxLayout(instruc, BoxLayout.PAGE_AXIS));
+		instruc.setAlignmentY(BoxLayout.LINE_AXIS);
+		newButton("Instructions", instruc);
+
 		JLabel title = new JLabel("Welcome to Hangman");
 		title.setFont(new Font("Times New Roman", Font.PLAIN, 32));
-		FontMetrics fm = title.getFontMetrics(title.getFont());
-		System.out.println(fm);
-		System.out.println(fm.stringWidth(title.getText()));
-		System.out.println(p1.getPreferredSize());
-		title.setBounds((int) (p1.getPreferredSize().getWidth()/2 - fm.stringWidth(title.getText())), 32, fm.stringWidth(title.getText()),40);
-		title.setAlignmentX(CENTER_ALIGNMENT);
-		title.setAlignmentY(TOP_ALIGNMENT);
-		p1.add(title, 0);
+		title.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		p1.add(Box.createVerticalGlue());
+		p1.add(title);
+		p1.add(Box.createVerticalGlue());
+		p1.add(buttons);
+		p1.add(Box.createVerticalGlue());
+
 		add(p1);
 	}
 
-	public void newImage(Image image, Container container){
+	public void newImage(Image image, Container container) {
 		JLabel img = new JLabel(new ImageIcon(image));
 		container.add(img);
 	}
-	
-	public void newButton(String text, Container container){
-		
+
+	public void newButton(String text, Container container) {
+
 		JButton txt = new JButton(text);
-		txt.setFont(new Font("Times New Roman",Font.PLAIN,32));
-		txt.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		txt.setFont(new Font("Times New Roman", Font.PLAIN, 32));
+		txt.setAlignmentX(Component.CENTER_ALIGNMENT);
 		txt.addActionListener(this);
 		container.add(txt);
 	}
-	
+
 	public void actionPerformed(ActionEvent E) {
-		if (E.getSource() == diffs.get(0)) {
-			System.out.println("Easy");
-			diff = 0;
-			inGame = true;
-		}
-		if (E.getSource() == diffs.get(1)) {
-			System.out.println("Med");
-			diff = 1;
-			inGame = true;
-		}
-		if (E.getSource() == diffs.get(2)) {
-			System.out.println("Hard");
-			diff = 2;
-			inGame = true;
-		}
-		if (E.getSource() instanceof JButton){
+		if (E.getSource() instanceof JButton) {
 			JButton button = (JButton) E.getSource();
-			switch(button.getText()){
+			switch (button.getText()) {
 			case "Easy":
 				diff = 0;
+				Main.setLoc("G");
 				break;
 			case "Medium":
 				diff = 1;
+				Main.setLoc("G");
 				break;
 			case "Hard":
-				diff= 2;
+				diff = 2;
+				Main.setLoc("G");
+				break;
+			case "Instructions":
+				diff = -1;
+				Main.setLoc("I");
 				break;
 			}
-			inGame = true;
 		}
-		Main.checkVisible(this, diff, inGame);
+		Main.makeFrame(diff);
 	}
-	
-	public class ImagePanel extends JPanel
-	{
-	    private int width,height;
-	    private Image image;
 
-	    public ImagePanel(Image image) 
-	    {
-	          this.image = image;
+	public class ImagePanel extends JPanel {
+		private int width, height;
+		private Image image;
 
-	          //so we can set the JPanel preferred size to the image width and height
-	          ImageIcon ii = new ImageIcon(this.image);
-	          width = ii.getIconWidth();
-	          height = ii.getIconHeight();
-	     }
+		public ImagePanel(Image image) {
+			this.image = image;
 
-	     //so our panel is the same size as image
-	     @Override
-	     public Dimension getPreferredSize() {
-	          return new Dimension(width, height);
-	     }
+			// so we can set the JPanel preferred size to the image width and
+			// height
+			ImageIcon ii = new ImageIcon(this.image);
+			width = ii.getIconWidth();
+			height = ii.getIconHeight();
+		}
 
-	     @Override
-	     protected void paintComponent(Graphics g) 
-	     {
-	        super.paintComponent(g);
-	        g.drawImage(image, 0, 0, null);
-	     }
+		// so our panel is the same size as image
+		@Override
+		public Dimension getPreferredSize() {
+			return new Dimension(width, height);
+		}
+
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			g.drawImage(image, 0, 0, null);
+		}
 
 	}
 }

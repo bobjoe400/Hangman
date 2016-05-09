@@ -1,11 +1,14 @@
 package main;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +17,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -29,13 +34,12 @@ public class Game extends JFrame implements ActionListener {
 
 	private int remainingGuesses;
 	private int diff;
-	private boolean inGame;
 	private String wrongGuesses;
 	private String word;
 	private String visible;
 
 	public Game(int difficulty) {
-		super("Main Game");
+		super("Hangman");
 		
 		diff = difficulty;
 
@@ -62,9 +66,28 @@ public class Game extends JFrame implements ActionListener {
 		for (int i = 0; i < word.length(); ++i) {
 			visible += "_ ";
 		}
-
+		
+		setLayout(new BorderLayout());
+		
+		JLabel image = new JLabel();
+		image.setSize(new Dimension(600, 600));
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File("Resources/game.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		image = new JLabel(new ImageIcon(img.getScaledInstance(image.getWidth(), image.getHeight(), Image.SCALE_SMOOTH)));
+		image.setSize(new Dimension(600,600));
+		setContentPane(image);
+		
+		setLayout(new BorderLayout());
+		setPreferredSize(image.getSize());
+		
 		JPanel corePanel = new JPanel();
 		corePanel.setLayout(new BorderLayout());
+		corePanel.setOpaque(false);
 
 		final JLabel status = new JLabel("You have " + remainingGuesses + " remaining", SwingConstants.CENTER);
 		final JLabel wrong = new JLabel("Wrong guesses so far: " + wrongGuesses);
@@ -149,7 +172,6 @@ public class Game extends JFrame implements ActionListener {
 		try {
 			FileInputStream stream = new FileInputStream(new File("Resources/dictionary.txt"));
 			BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-			StringBuilder input = new StringBuilder();
 			String line;
 			while ((line = br.readLine()) != null) {
 				words.add(line);
@@ -175,12 +197,12 @@ public class Game extends JFrame implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == fileItems.get(0)) {
-			inGame = false;
+			Main.setLoc("M");
 		}
 		if (e.getSource() == fileItems.get(1)) {
 			this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		}
-		Main.checkVisible(this, diff, inGame);
+		Main.makeFrame(diff);
 	}
 
 }
