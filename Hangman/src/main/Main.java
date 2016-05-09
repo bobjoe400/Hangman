@@ -1,7 +1,16 @@
 package main;
 
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 
@@ -10,6 +19,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 
 public class Main {
 
@@ -31,30 +41,40 @@ public class Main {
 	public static void main(String[] args) {
 		Thread music = new Thread(new MusicThread());
 		music.start();
-		new MainMenu();
+		makeFrame(0, 0);
 	}
 
-	public static void checkVisible(JFrame f, int diff, boolean inGame) {
+	public static void makeFrame(int dec, int diff) {
+		if (Frame.getFrames() != null) {
+			for (int i = 0; i < Frame.getFrames().length; i++) {
+				Frame.getFrames()[i].dispose();
+			}
+		}
+		JFrame f = null;
+		switch (dec) {
+		case 0:
+			f = new MainMenu();
+			break;
+		case 1:
+			f = new Game(diff);
+			break;
+		}
+		f.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
+		f.pack();
+		f.setLocationRelativeTo(null);
+		f.setVisible(true);
+	}
+
+	public static void checkVisible(Object f, int diff, boolean inGame) {
 		if (f instanceof Game && !inGame) {
-			f.dispose();
-			new MainMenu();
+			makeFrame(0, 0);
 		} else if (f instanceof MainMenu && inGame) {
-			f.dispose();
-			new Game("cat", diff);
-		} else {
-			f.setVisible(true);
+			makeFrame(1, diff);
 		}
 	}
-	
-	static class ImagePanel extends JComponent {
-	    private Image image;
-	    public ImagePanel(Image image) {
-	        this.image = image;
-	    }
-	    @Override
-	    protected void paintComponent(Graphics g) {
-	        super.paintComponent(g);
-	        g.drawImage(image, 0, 0, this);
-	    }
-	}
+
 }
