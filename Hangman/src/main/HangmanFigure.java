@@ -7,7 +7,6 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 
 public class HangmanFigure extends JPanel {
-	// Sup
 	private int guesses;
 
 	public HangmanFigure() {
@@ -15,7 +14,6 @@ public class HangmanFigure extends JPanel {
 		guesses = 0;
 		setPreferredSize(new Dimension(600, 600));
 		setOpaque(true);
-		System.out.println("lamo");
 	}
 
 	public void paintComponent(Graphics g) {
