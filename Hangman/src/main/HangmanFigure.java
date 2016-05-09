@@ -13,17 +13,16 @@ public class HangmanFigure extends JPanel {
 	public HangmanFigure() {
 		super();
 		guesses = 0;
-		setPreferredSize(new Dimension(300, 300));
+		setPreferredSize(new Dimension(600, 600));
 		setOpaque(true);
 		System.out.println("lamo");
 	}
 
 	public void paintComponent(Graphics g) {
 		g.setColor(Color.BLACK);
-
 		// base
 		if (guesses > 0) {
-			g.drawLine(1, 299, 299, 299);
+			g.drawLine(1, 599, 599, 599);
 		}
 
 		// right wall

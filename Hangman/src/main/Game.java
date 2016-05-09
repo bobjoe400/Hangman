@@ -6,7 +6,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,7 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-public class Game extends JFrame implements ActionListener, WindowListener {
+public class Game extends JFrame implements ActionListener {
 
 	private ArrayList<JMenuItem> fileItems;
 
@@ -28,9 +34,10 @@ public class Game extends JFrame implements ActionListener, WindowListener {
 	private String word;
 	private String visible;
 
-	public Game(String toGuess, int difficulty) {
-
-		this.addWindowListener(this);
+	public Game(int difficulty) {
+		super("Main Game");
+		
+		diff = difficulty;
 
 		fileItems = new ArrayList<JMenuItem>();
 
@@ -44,10 +51,11 @@ public class Game extends JFrame implements ActionListener, WindowListener {
 			fileMenu.add(item);
 		}
 		menuBar.add(fileMenu);
-
+		setJMenuBar(menuBar);
+		
 		remainingGuesses = 10;
 		wrongGuesses = "";
-		word = toGuess;
+		word = generateWord();
 
 		visible = "";
 
@@ -133,11 +141,36 @@ public class Game extends JFrame implements ActionListener, WindowListener {
 			}
 
 		});
-		this.setJMenuBar(menuBar);
-		this.pack();
-		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setVisible(true);
+	}
+
+	public String generateWord() {
+		ArrayList<String> words = new ArrayList<String>();
+		String word = "";
+		try {
+			FileInputStream stream = new FileInputStream(new File("Resources/dictionary.txt"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+			StringBuilder input = new StringBuilder();
+			String line;
+			while ((line = br.readLine()) != null) {
+				words.add(line);
+			}
+			switch (diff) {
+			case 0:
+				word = words.get(Math.abs(new Random().nextInt(500)));
+				break;
+			case 1:
+				word = words.get(Math.abs(new Random().ints(4500,500,5000).findAny().getAsInt()));
+				break;
+			case 2:
+				word = words.get(Math.abs(new Random().ints(5000,5000,10000).findAny().getAsInt()));
+				break;
+			}
+			br.close();
+			stream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return word;
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -150,45 +183,4 @@ public class Game extends JFrame implements ActionListener, WindowListener {
 		Main.checkVisible(this, diff, inGame);
 	}
 
-	@Override
-	public void windowActivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		// TODO Auto-generated method stub
-		System.exit(0);
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
 }
