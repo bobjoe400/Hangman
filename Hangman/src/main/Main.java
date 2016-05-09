@@ -1,14 +1,6 @@
 package main;
 
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
@@ -17,11 +9,12 @@ import java.io.FileInputStream;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLayeredPane;
 
 public class Main {
+
+	private static Thread music;
+	private static String loc;
 
 	static class MusicThread implements Runnable {
 		public void run() {
@@ -39,24 +32,28 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		Thread music = new Thread(new MusicThread());
+		music = new Thread(new MusicThread());
 		music.start();
-		makeFrame(0, 0);
+		loc = "M";
+		makeFrame(-1);
 	}
 
-	public static void makeFrame(int dec, int diff) {
+	public static void makeFrame(int diff) {
 		if (Frame.getFrames() != null) {
 			for (int i = 0; i < Frame.getFrames().length; i++) {
 				Frame.getFrames()[i].dispose();
 			}
 		}
 		JFrame f = null;
-		switch (dec) {
-		case 0:
+		switch (loc) {
+		case "M":
 			f = new MainMenu();
 			break;
-		case 1:
+		case "G":
 			f = new Game(diff);
+			break;
+		case "I":
+			f = new Instructions();
 			break;
 		}
 		f.addWindowListener(new WindowAdapter() {
@@ -69,12 +66,7 @@ public class Main {
 		f.setVisible(true);
 	}
 
-	public static void checkVisible(Object f, int diff, boolean inGame) {
-		if (f instanceof Game && !inGame) {
-			makeFrame(0, 0);
-		} else if (f instanceof MainMenu && inGame) {
-			makeFrame(1, diff);
-		}
+	public static void setLoc(String newLoc) {
+		loc = newLoc;
 	}
-
 }
