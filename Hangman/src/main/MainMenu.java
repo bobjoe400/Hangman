@@ -5,14 +5,12 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -21,15 +19,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
-public class MainMenu extends JFrame implements ActionListener {
+public class MainMenu extends JFrame {
 
-	private ArrayList<JMenuItem> diffs;
 	private int diff;
 
 	public MainMenu() {
@@ -58,26 +51,26 @@ public class MainMenu extends JFrame implements ActionListener {
 		JPanel buttons = new JPanel();
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
 		buttons.setOpaque(false);
-		newButton("Instructions", buttons);
+		Main.newButton("Instructions", buttons, this, Component.CENTER_ALIGNMENT, 32);
 
 		JPanel diffbuttons = new JPanel();
 		diffbuttons.setOpaque(false);
 		diffbuttons.setLayout(new BoxLayout(diffbuttons, BoxLayout.X_AXIS));
 		diffbuttons.add(Box.createHorizontalGlue());
-		newButton("Easy", diffbuttons);
+		Main.newButton("Easy", diffbuttons, this, Component.CENTER_ALIGNMENT, 32);
 		diffbuttons.add(Box.createHorizontalGlue());
-		newButton("Medium", diffbuttons);
+		Main.newButton("Medium", diffbuttons, this, Component.CENTER_ALIGNMENT, 32);
 		diffbuttons.add(Box.createHorizontalGlue());
-		newButton("Hard", diffbuttons);
+		Main.newButton("Hard", diffbuttons, this, Component.CENTER_ALIGNMENT, 32);
 		diffbuttons.add(Box.createHorizontalGlue());
 		buttons.add(Box.createVerticalGlue());
-		buttons.add(diffbuttons);
+		buttons.add(diffbuttons, this);
 
 		JPanel instruc = new JPanel();
 		instruc.setOpaque(false);
 		instruc.setLayout(new BoxLayout(instruc, BoxLayout.PAGE_AXIS));
 		instruc.setAlignmentY(BoxLayout.LINE_AXIS);
-		newButton("Instructions", instruc);
+		Main.newButton("Instructions", instruc, this, Component.CENTER_ALIGNMENT, 32);
 
 		JLabel title = new JLabel("Welcome to Hangman");
 		title.setFont(new Font("Times New Roman", Font.PLAIN, 32));
@@ -95,67 +88,5 @@ public class MainMenu extends JFrame implements ActionListener {
 	public void newImage(Image image, Container container) {
 		JLabel img = new JLabel(new ImageIcon(image));
 		container.add(img);
-	}
-
-	public void newButton(String text, Container container) {
-
-		JButton txt = new JButton(text);
-		txt.setFont(new Font("Times New Roman", Font.PLAIN, 32));
-		txt.setAlignmentX(Component.CENTER_ALIGNMENT);
-		txt.addActionListener(this);
-		container.add(txt);
-	}
-
-	public void actionPerformed(ActionEvent E) {
-		if (E.getSource() instanceof JButton) {
-			JButton button = (JButton) E.getSource();
-			switch (button.getText()) {
-			case "Easy":
-				diff = 0;
-				Main.setLoc("G");
-				break;
-			case "Medium":
-				diff = 1;
-				Main.setLoc("G");
-				break;
-			case "Hard":
-				diff = 2;
-				Main.setLoc("G");
-				break;
-			case "Instructions":
-				diff = -1;
-				Main.setLoc("I");
-				break;
-			}
-		}
-		Main.makeFrame(diff);
-	}
-
-	public class ImagePanel extends JPanel {
-		private int width, height;
-		private Image image;
-
-		public ImagePanel(Image image) {
-			this.image = image;
-
-			// so we can set the JPanel preferred size to the image width and
-			// height
-			ImageIcon ii = new ImageIcon(this.image);
-			width = ii.getIconWidth();
-			height = ii.getIconHeight();
-		}
-
-		// so our panel is the same size as image
-		@Override
-		public Dimension getPreferredSize() {
-			return new Dimension(width, height);
-		}
-
-		@Override
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.drawImage(image, 0, 0, null);
-		}
-
 	}
 }
