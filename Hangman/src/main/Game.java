@@ -2,12 +2,10 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,16 +19,12 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-public class Game extends JFrame implements ActionListener {
-
-	private ArrayList<JMenuItem> fileItems;
+public class Game extends JFrame {
 
 	private int remainingGuesses;
 	private int diff;
@@ -40,23 +34,14 @@ public class Game extends JFrame implements ActionListener {
 
 	public Game(int difficulty) {
 		super("Hangman");
-		
+
 		diff = difficulty;
 
-		fileItems = new ArrayList<JMenuItem>();
-
-		fileItems.add(new JMenuItem("Return to main menu"));
+		ArrayList<JMenuItem> fileItems = new ArrayList<JMenuItem>();
+		fileItems.add(new JMenuItem("Return to Main Menu"));
 		fileItems.add(new JMenuItem("Exit"));
+		Main.newMenu(fileItems, this);
 
-		JMenuBar menuBar = new JMenuBar();
-		JMenu fileMenu = new JMenu("File");
-		for (JMenuItem item : fileItems) {
-			item.addActionListener(this);
-			fileMenu.add(item);
-		}
-		menuBar.add(fileMenu);
-		setJMenuBar(menuBar);
-		
 		remainingGuesses = 10;
 		wrongGuesses = "";
 		word = generateWord();
@@ -66,9 +51,9 @@ public class Game extends JFrame implements ActionListener {
 		for (int i = 0; i < word.length(); ++i) {
 			visible += "_ ";
 		}
-		
+
 		setLayout(new BorderLayout());
-		
+
 		JLabel image = new JLabel();
 		image.setSize(new Dimension(600, 600));
 		BufferedImage img = null;
@@ -77,14 +62,15 @@ public class Game extends JFrame implements ActionListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		image = new JLabel(new ImageIcon(img.getScaledInstance(image.getWidth(), image.getHeight(), Image.SCALE_SMOOTH)));
-		image.setSize(new Dimension(600,600));
+
+		image = new JLabel(
+				new ImageIcon(img.getScaledInstance(image.getWidth(), image.getHeight(), Image.SCALE_SMOOTH)));
+		image.setSize(new Dimension(600, 600));
 		setContentPane(image);
-		
+
 		setLayout(new BorderLayout());
 		setPreferredSize(image.getSize());
-		
+
 		JPanel corePanel = new JPanel();
 		corePanel.setLayout(new BorderLayout());
 		corePanel.setOpaque(false);
@@ -92,20 +78,22 @@ public class Game extends JFrame implements ActionListener {
 		final JLabel status = new JLabel("You have " + remainingGuesses + " remaining", SwingConstants.CENTER);
 		final JLabel wrong = new JLabel("Wrong guesses so far: " + wrongGuesses);
 		final JLabel visibleLabel = new JLabel(visible, SwingConstants.CENTER);
+		final JLabel diffLabel = new JLabel("Difficulty: " + diffString(), SwingConstants.RIGHT);
 		final JTextField input = new JTextField();
 
-		JPanel southPanel = new JPanel(new GridLayout(4, 1));
+		JPanel southPanel = new JPanel(new GridLayout(5, 1));
 		southPanel.add(status);
 		southPanel.add(visibleLabel);
 		southPanel.add(input);
 		southPanel.add(wrong);
+		southPanel.add(diffLabel);
 
 		corePanel.add(southPanel, BorderLayout.SOUTH);
 
 		final HangmanFigure hf = new HangmanFigure();
 		corePanel.add(hf, BorderLayout.CENTER);
 
-		this.add(corePanel, BorderLayout.CENTER);
+		add(corePanel, BorderLayout.CENTER);
 
 		input.addActionListener(new ActionListener() {
 
@@ -162,11 +150,10 @@ public class Game extends JFrame implements ActionListener {
 
 				input.setText("");
 			}
-
 		});
 	}
 
-	public String generateWord() {
+	private String generateWord() {
 		ArrayList<String> words = new ArrayList<String>();
 		String word = "";
 		try {
@@ -181,10 +168,13 @@ public class Game extends JFrame implements ActionListener {
 				word = words.get(Math.abs(new Random().nextInt(500)));
 				break;
 			case 1:
-				word = words.get(Math.abs(new Random().ints(4500,500,5000).findAny().getAsInt()));
+				word = words.get(Math.abs(new Random().ints(4500, 500, 5000).findAny().getAsInt()));
 				break;
 			case 2:
-				word = words.get(Math.abs(new Random().ints(5000,5000,10000).findAny().getAsInt()));
+				word = words.get(Math.abs(new Random().ints(5000, 5000, 10000).findAny().getAsInt()));
+				break;
+			default:
+				System.out.println("Error: The difficulty is not one of the three. This shouldn't happen.");
 				break;
 			}
 			br.close();
@@ -195,14 +185,16 @@ public class Game extends JFrame implements ActionListener {
 		return word;
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == fileItems.get(0)) {
-			Main.setLoc("M");
+	private String diffString() {
+		switch (diff) {
+		case 0:
+			return "Easy";
+		case 1:
+			return "Medium";
+		case 2:
+			return "Hard";
+		default:
+			return "Error calculating difficulty";
 		}
-		if (e.getSource() == fileItems.get(1)) {
-			this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-		}
-		Main.makeFrame(diff);
 	}
-
 }
