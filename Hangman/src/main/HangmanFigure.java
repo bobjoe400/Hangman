@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 public class HangmanFigure extends JPanel {
 	// Sup
 	private int guesses;
-	private String[] imagenames = {"Resources/left.jpg", "Resources/top.jpg", "Resources/rope.png", "Resources/bot.jpg", "Resources/body.png", "Resources/leftarm.png", "Resources/rightarm.png", "Resources/leftleg.png", "Resources/rightleg.png", "Resources/head.png"};
+	private String[] imagenames = {"Resources/Man/left.jpg", "Resources/Man/top.jpg", "Resources/Man/rope.png", "Resources/Man/bot.jpg", "Resources/Man/body.png", "Resources/Man/leftarm.png", "Resources/Man/rightarm.png", "Resources/Man/leftleg.png", "Resources/Man/rightleg.png", "Resources/Man/head.png"};
 	private BufferedImage[] images = new BufferedImage[imagenames.length];
 
 	public HangmanFigure() {
@@ -40,7 +40,7 @@ public class HangmanFigure extends JPanel {
 		// base
 		if (guesses > 0) {
 			//g.drawLine(1, 299, 299, 299);
-			g.drawImage(images[3], 35, 450, null);
+			g.drawImage(images[3], 35, 400, null);
 
 		}
 
