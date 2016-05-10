@@ -84,9 +84,4 @@ public class MainMenu extends JFrame {
 
 		add(p1);
 	}
-
-	public void newImage(Image image, Container container) {
-		JLabel img = new JLabel(new ImageIcon(image));
-		container.add(img);
-	}
 }
