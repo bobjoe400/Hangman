@@ -32,9 +32,11 @@ public class Game extends JFrame {
 	private String word;
 	private String visible;
 
-	public Game(int difficulty) {
+	public Game(int difficulty,String currWord) {
 		super("Hangman");
-
+		
+		setResizable(false);
+		
 		diff = difficulty;
 
 		ArrayList<JMenuItem> fileItems = new ArrayList<JMenuItem>();
@@ -44,8 +46,9 @@ public class Game extends JFrame {
 
 		remainingGuesses = 10;
 		wrongGuesses = "";
-		word = generateWord();
-
+		
+		word = (currWord == null)? generateWord(): currWord;
+		
 		visible = "";
 
 		for (int i = 0; i < word.length(); ++i) {
@@ -78,7 +81,6 @@ public class Game extends JFrame {
 		final JLabel status = new JLabel("You have " + remainingGuesses + " remaining", SwingConstants.CENTER);
 		final JLabel wrong = new JLabel("Wrong guesses so far: " + wrongGuesses);
 		final JLabel visibleLabel = new JLabel(visible, SwingConstants.CENTER);
-		final JLabel diffLabel = new JLabel("Difficulty: " + diffString(), SwingConstants.RIGHT);
 		final JTextField input = new JTextField();
 
 		JPanel southPanel = new JPanel(new GridLayout(5, 1));
@@ -86,9 +88,14 @@ public class Game extends JFrame {
 		southPanel.add(visibleLabel);
 		southPanel.add(input);
 		southPanel.add(wrong);
-		southPanel.add(diffLabel);
-
+		
+		JPanel mute = new JPanel();
+		mute.setOpaque(false);
+		Main.newButton("Mute music", mute, this, RIGHT_ALIGNMENT, 16);
+		
+		corePanel.add(mute, BorderLayout.EAST);
 		corePanel.add(southPanel, BorderLayout.SOUTH);
+		//Main.addStatus(this, corePanel);
 
 		final HangmanFigure hf = new HangmanFigure();
 		corePanel.add(hf, BorderLayout.CENTER);
@@ -184,8 +191,8 @@ public class Game extends JFrame {
 		}
 		return word;
 	}
-
-	private String diffString() {
+	
+	public String diffString() {
 		switch (diff) {
 		case 0:
 			return "Easy";
@@ -196,5 +203,9 @@ public class Game extends JFrame {
 		default:
 			return "Error calculating difficulty";
 		}
+	}
+	
+	public String getWord(){
+		return word;
 	}
 }

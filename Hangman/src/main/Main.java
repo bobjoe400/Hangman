@@ -1,5 +1,7 @@
 package main;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.Frame;
@@ -14,39 +16,75 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 public class Main {
 
-	private static Thread music;
+	private static Thread musicThread;
+	private static MusicThread music;
 	private static String loc;
 	private static JFrame currFrame;
 	private static int diff;
+	private static int file;
+	private static String word;
 
 	static class MusicThread implements Runnable {
+
+		volatile boolean play;
+		volatile Clip clip;
+
+		public MusicThread(boolean play) {
+			this.play = play;
+		}
+
 		public void run() {
 			try {
-				FileInputStream fs = new FileInputStream("Resources/music.wav");
+				FileInputStream fs = new FileInputStream("Resources/music" + file + ".wav");
 				BufferedInputStream buffered = new BufferedInputStream(fs);
 				AudioInputStream inputStream = AudioSystem.getAudioInputStream(buffered);
-				Clip clip = AudioSystem.getClip();
+				clip = AudioSystem.getClip();
 				clip.open(inputStream);
-				clip.loop(Clip.LOOP_CONTINUOUSLY);
+				while (!musicThread.interrupted() && play) {
+					if (!clip.isRunning()) {
+						clip.start();
+					}
+				}
+				clip.stop();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+
+		public void toggle(){
+			play = !play;
+			if(play){
+				musicThread.interrupt();
+			}
+			new Main(file, play, loc, diff, currFrame);
+		}
+		public void changeSong(){
+			play = false;
+			musicThread.interrupt();
+			new Main(file, true, loc, diff, currFrame);
+		}
+	}
+	
+	public Main(int file, boolean play, String loc, int diff, JFrame f){
+		this.file = file;
+		music = new MusicThread(play);
+		musicThread = new Thread(music);
+		musicThread.start();
+		this.loc = loc;
+		this.diff = diff;
+		currFrame = f;
+		updateFrame();
 	}
 
 	public static void main(String[] args) {
-		music = new Thread(new MusicThread());
-		music.start();
-		loc = "M";
-		diff = -1;
-		currFrame = new JFrame();
-		updateFrame();
+		new Main(0, true, "M", -1, new JFrame());
 	}
 
 	public static void updateFrame() {
@@ -61,10 +99,15 @@ public class Main {
 			f = new MainMenu();
 			break;
 		case "G":
-			f = new Game(diff);
+			f = new Game(diff,word);
+			Game g  = (Game) f;
+			word = g.getWord();
 			break;
 		case "I":
 			f = new Instructions();
+			break;
+		case "O":
+			f = new Options();
 			break;
 		}
 		f.addWindowListener(new WindowAdapter() {
@@ -78,12 +121,13 @@ public class Main {
 		currFrame.setVisible(true);
 	}
 
-	public static void newButton(String text, Container container, JFrame currFrame, float align, int size) {
+	public static JButton newButton(String text, Container container, JFrame currFrame, float align, int size) {
 		JButton txt = new JButton(text);
 		txt.setFont(new Font("Times New Roman", Font.PLAIN, size));
 		txt.setAlignmentX(align);
 		txt.addActionListener(new NavigationListener(currFrame));
 		container.add(txt);
+		return txt;
 	}
 
 	public static void newMenu(ArrayList<JMenuItem> items, JFrame currFrame) {
@@ -97,11 +141,41 @@ public class Main {
 		currFrame.setJMenuBar(menuBar);
 	}
 
+	public static void addStatus(JFrame f, Container c) {
+		String s = "";
+		if (f instanceof Game) {
+			Game g = (Game) f;
+			s = "Difficulty: " + g.diffString() + "Music: " + (musicStatus() ? "On" : "Off");
+		} else {
+			s = "Music: " + musicStatus();
+		}
+		JLabel j = new JLabel(s);
+		j.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		c.add(j, BorderLayout.SOUTH);
+	}
+
 	public static void setLoc(String newLoc) {
 		loc = newLoc;
 	}
 
 	public static void setDiff(int newDiff) {
 		diff = newDiff;
+	}
+
+	public static void setMusic(int song, boolean mute) {
+		file = song;
+		if(mute){
+			music.toggle();
+		}else{
+			music.changeSong();
+		}
+	}
+
+	public static boolean musicStatus() {
+		return !musicThread.isInterrupted();
+	}
+
+	public static int getMusicFile() {
+		return file;
 	}
 }

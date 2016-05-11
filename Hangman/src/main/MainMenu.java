@@ -3,6 +3,7 @@ package main;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -36,7 +37,13 @@ public class MainMenu extends JFrame {
 		setContentPane(image);
 		setLayout(new BorderLayout());
 		setPreferredSize(image.getSize());
-
+		
+		JPanel south = new JPanel();
+		south.setLayout(new BoxLayout(south, BoxLayout.Y_AXIS));
+		south.setOpaque(false);
+		Main.newButton("Mute music", south, this, Component.RIGHT_ALIGNMENT, 16);
+		Main.addStatus(this, south);
+		
 		JPanel p1 = new JPanel();
 		p1.setOpaque(false);
 		p1.setLayout(new BoxLayout(p1, BoxLayout.Y_AXIS));
@@ -44,7 +51,9 @@ public class MainMenu extends JFrame {
 		JPanel buttons = new JPanel();
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
 		buttons.setOpaque(false);
-		Main.newButton("Instructions", buttons, this, Component.CENTER_ALIGNMENT, 32);
+		Main.newButton("Options" , buttons, this, Component.CENTER_ALIGNMENT, 32);
+		//buttons.add(Box.createVerticalGlue());
+		//Main.newButton("Instructions", buttons, this, Component.CENTER_ALIGNMENT, 32);
 
 		JPanel diffbuttons = new JPanel();
 		diffbuttons.setOpaque(false);
@@ -59,11 +68,11 @@ public class MainMenu extends JFrame {
 		buttons.add(Box.createVerticalGlue());
 		buttons.add(diffbuttons, this);
 
-		JPanel instruc = new JPanel();
+		/*JPanel instruc = new JPanel();
 		instruc.setOpaque(false);
 		instruc.setLayout(new BoxLayout(instruc, BoxLayout.PAGE_AXIS));
 		instruc.setAlignmentY(BoxLayout.LINE_AXIS);
-		Main.newButton("Instructions", instruc, this, Component.CENTER_ALIGNMENT, 32);
+		Main.newButton("Instructions", instruc, this, Component.CENTER_ALIGNMENT, 32);*/
 
 		JLabel title = new JLabel("Welcome to Hangman");
 		title.setFont(new Font("Times New Roman", Font.PLAIN, 32));
@@ -74,7 +83,7 @@ public class MainMenu extends JFrame {
 		p1.add(Box.createVerticalGlue());
 		p1.add(buttons);
 		p1.add(Box.createVerticalGlue());
-
 		add(p1);
+		add(south, BorderLayout.SOUTH);
 	}
 }
