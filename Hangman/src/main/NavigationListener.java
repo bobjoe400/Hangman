@@ -7,6 +7,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 
+import main.Main.MusicThread;
+
 public class NavigationListener implements ActionListener {
 
 	private JFrame currFrame;
@@ -18,6 +20,9 @@ public class NavigationListener implements ActionListener {
 	public void actionPerformed(ActionEvent E) {
 		if (E.getSource() instanceof JButton) {
 			JButton button = (JButton) E.getSource();
+			if(button.getText().contains("Mute")){
+				Main.setMusic(Main.getMusicFile(),true);
+			}
 			if (currFrame instanceof MainMenu) {
 				switch (button.getText()) {
 				case "Easy":
