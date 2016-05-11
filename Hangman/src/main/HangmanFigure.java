@@ -10,7 +10,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class HangmanFigure extends JPanel {
-	// Sup
 	private int guesses;
 	private String[] imagenames = {"Resources/Man/left.jpg", "Resources/Man/top.jpg", "Resources/Man/rope.png", "Resources/Man/bot.jpg", "Resources/Man/body.png", "Resources/Man/leftarm.png", "Resources/Man/rightarm.png", "Resources/Man/leftleg.png", "Resources/Man/rightleg.png", "Resources/Man/head.png"};
 	private BufferedImage[] images = new BufferedImage[imagenames.length];
