@@ -29,11 +29,12 @@ public class Main {
 	private static JFrame currFrame;
 	private static int diff;
 	private static int file;
-	private static String word = null;
+	private static String word;
 
 	static class MusicThread implements Runnable {
 
 		volatile boolean play;
+		volatile Clip clip;
 
 		public MusicThread(boolean play) {
 			this.play = play;
@@ -44,9 +45,9 @@ public class Main {
 				FileInputStream fs = new FileInputStream("Resources/music" + file + ".wav");
 				BufferedInputStream buffered = new BufferedInputStream(fs);
 				AudioInputStream inputStream = AudioSystem.getAudioInputStream(buffered);
-				Clip clip = AudioSystem.getClip();
+				clip = AudioSystem.getClip();
 				clip.open(inputStream);
-				while (play) {
+				while (!musicThread.interrupted() && play) {
 					if (!clip.isRunning()) {
 						clip.start();
 					}
@@ -57,11 +58,17 @@ public class Main {
 			}
 		}
 
-		public void toggle(boolean b) {
-			if(b){
-				play = !play;
+		public void toggle(){
+			play = !play;
+			if(play){
+				musicThread.interrupt();
 			}
 			new Main(file, play, loc, diff, currFrame);
+		}
+		public void changeSong(){
+			play = false;
+			musicThread.interrupt();
+			new Main(file, true, loc, diff, currFrame);
 		}
 	}
 	
@@ -98,6 +105,9 @@ public class Main {
 			break;
 		case "I":
 			f = new Instructions();
+			break;
+		case "O":
+			f = new Options();
 			break;
 		}
 		f.addWindowListener(new WindowAdapter() {
@@ -154,10 +164,11 @@ public class Main {
 
 	public static void setMusic(int song, boolean mute) {
 		file = song;
-		if (mute) {
-			music.toggle(true);
+		if(mute){
+			music.toggle();
+		}else{
+			music.changeSong();
 		}
-		music.toggle(false);
 	}
 
 	public static boolean musicStatus() {

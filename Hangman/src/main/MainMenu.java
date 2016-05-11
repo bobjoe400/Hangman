@@ -52,8 +52,8 @@ public class MainMenu extends JFrame {
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
 		buttons.setOpaque(false);
 		Main.newButton("Options" , buttons, this, Component.CENTER_ALIGNMENT, 32);
-		buttons.add(Box.createVerticalGlue());
-		Main.newButton("Instructions", buttons, this, Component.CENTER_ALIGNMENT, 32);
+		//buttons.add(Box.createVerticalGlue());
+		//Main.newButton("Instructions", buttons, this, Component.CENTER_ALIGNMENT, 32);
 
 		JPanel diffbuttons = new JPanel();
 		diffbuttons.setOpaque(false);

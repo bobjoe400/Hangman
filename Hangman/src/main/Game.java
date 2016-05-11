@@ -34,7 +34,9 @@ public class Game extends JFrame {
 
 	public Game(int difficulty,String currWord) {
 		super("Hangman");
-
+		
+		setResizable(false);
+		
 		diff = difficulty;
 
 		ArrayList<JMenuItem> fileItems = new ArrayList<JMenuItem>();
@@ -204,6 +206,6 @@ public class Game extends JFrame {
 	}
 	
 	public String getWord(){
-		return word; 
+		return word;
 	}
 }

@@ -41,6 +41,20 @@ public class NavigationListener implements ActionListener {
 					Main.setDiff(-1);
 					Main.setLoc("I");
 					break;
+				case "Options":
+					Main.setDiff(-1);
+					Main.setLoc("O");
+					break;
+				}
+			}else if(currFrame instanceof Options){
+				switch(button.getText()){
+				case "Change Song":
+					Main.setMusic(1,false);
+					break;
+				case "Return to Main Menu":
+					Main.setDiff(-1);
+					Main.setLoc("M");
+					break;
 				}
 			}
 		} else if (E.getSource() instanceof JMenuItem) {

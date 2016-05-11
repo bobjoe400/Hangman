@@ -17,7 +17,7 @@ public class HangmanFigure extends JPanel {
 
 	public HangmanFigure() {
 		super();
-		guesses = 0;
+		this.guesses = 0;
 		int i = 0;
 		try {
 			for (String name : imagenames) {
@@ -112,5 +112,5 @@ public class HangmanFigure extends JPanel {
 		guesses++;
 		paintComponent(getGraphics());
 	}
-
+	
 }
