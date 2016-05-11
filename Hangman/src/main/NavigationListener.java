@@ -7,11 +7,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 
-import main.Main.MusicThread;
-
 public class NavigationListener implements ActionListener {
 
 	private JFrame currFrame;
+	private boolean isPlaying = true;
 
 	public NavigationListener(JFrame currFrame) {
 		this.currFrame = currFrame;
@@ -21,7 +20,12 @@ public class NavigationListener implements ActionListener {
 		if (E.getSource() instanceof JButton) {
 			JButton button = (JButton) E.getSource();
 			if(button.getText().contains("Mute")){
-				Main.setMusic(Main.getMusicFile(),true);
+				if(isPlaying){
+					Main.setMusic(true, true);
+				}else{
+					Main.setMusic(true, false);
+				}
+				isPlaying = !isPlaying;
 			}
 			if (currFrame instanceof MainMenu) {
 				switch (button.getText()) {
@@ -37,10 +41,6 @@ public class NavigationListener implements ActionListener {
 					Main.setDiff(2);
 					Main.setLoc("G");
 					break;
-				case "Instructions":
-					Main.setDiff(-1);
-					Main.setLoc("I");
-					break;
 				case "Options":
 					Main.setDiff(-1);
 					Main.setLoc("O");
@@ -49,7 +49,7 @@ public class NavigationListener implements ActionListener {
 			}else if(currFrame instanceof Options){
 				switch(button.getText()){
 				case "Change Song":
-					Main.setMusic(1,false);
+					Main.setMusic(false, false);
 					break;
 				case "Return to Main Menu":
 					Main.setDiff(-1);
@@ -71,6 +71,7 @@ public class NavigationListener implements ActionListener {
 				}
 			}
 		}
+		Main.updateBar();
 		Main.updateFrame();
 	}
 }

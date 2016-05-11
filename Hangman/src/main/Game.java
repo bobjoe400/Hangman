@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,9 +29,11 @@ public class Game extends JFrame {
 
 	private int remainingGuesses;
 	private int diff;
+	private int hints; 
 	private String wrongGuesses;
 	private String word;
 	private String visible;
+	private JPanel southPanel;
 
 	public Game(int difficulty,String currWord) {
 		super("Hangman");
@@ -38,6 +41,7 @@ public class Game extends JFrame {
 		setResizable(false);
 		
 		diff = difficulty;
+		hints = 0; 
 
 		ArrayList<JMenuItem> fileItems = new ArrayList<JMenuItem>();
 		fileItems.add(new JMenuItem("Return to Main Menu"));
@@ -72,7 +76,6 @@ public class Game extends JFrame {
 		setContentPane(image);
 
 		setLayout(new BorderLayout());
-		setPreferredSize(image.getSize());
 
 		JPanel corePanel = new JPanel();
 		corePanel.setLayout(new BorderLayout());
@@ -83,19 +86,20 @@ public class Game extends JFrame {
 		final JLabel visibleLabel = new JLabel(visible, SwingConstants.CENTER);
 		final JTextField input = new JTextField();
 
-		JPanel southPanel = new JPanel(new GridLayout(5, 1));
+		southPanel = new JPanel(new GridLayout(5, 1));
 		southPanel.add(status);
 		southPanel.add(visibleLabel);
 		southPanel.add(input);
 		southPanel.add(wrong);
+
+		JPanel topButtons = new JPanel();
+		topButtons.setLayout(new BoxLayout(topButtons, BoxLayout.X_AXIS));
+		topButtons.setOpaque(false);
+
 		
-		JPanel mute = new JPanel();
-		mute.setOpaque(false);
-		Main.newButton("Mute music", mute, this, RIGHT_ALIGNMENT, 16);
-		
-		corePanel.add(mute, BorderLayout.EAST);
+		corePanel.add(topButtons, BorderLayout.NORTH);
 		corePanel.add(southPanel, BorderLayout.SOUTH);
-		//Main.addStatus(this, corePanel);
+		
 
 		final HangmanFigure hf = new HangmanFigure();
 		corePanel.add(hf, BorderLayout.CENTER);

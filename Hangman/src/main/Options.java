@@ -32,7 +32,6 @@ public class Options extends JFrame	{
 		image.setSize(new Dimension(600, 600));
 		setContentPane(image);
 		setLayout(new BorderLayout());
-		setPreferredSize(image.getSize());
 		
 		JPanel buttons = new JPanel();
 		buttons.setOpaque(false);
@@ -43,5 +42,8 @@ public class Options extends JFrame	{
 		Main.newButton("Return to Main Menu", buttons, this, Component.CENTER_ALIGNMENT, 32);
 		buttons.add(Box.createVerticalGlue());
 		add(buttons);
+	}
+	public void updateBar(){
+		
 	}
 }

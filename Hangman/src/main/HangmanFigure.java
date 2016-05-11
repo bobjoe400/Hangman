@@ -40,7 +40,7 @@ public class HangmanFigure extends JPanel {
 		// base
 		if (guesses > 0) {
 			//g.drawLine(1, 299, 299, 299);
-			g.drawImage(images[3], 35, 432, null);
+			g.drawImage(images[3], 35, 386, null);
 
 		}
 
