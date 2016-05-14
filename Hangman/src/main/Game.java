@@ -35,7 +35,7 @@ public class Game extends JFrame {
 	private String visible;
 	private JPanel southPanel;
 
-	public Game(int difficulty,String currWord) {
+	public Game(int difficulty) {
 		super("Hangman");
 		
 		setResizable(false);
@@ -51,7 +51,7 @@ public class Game extends JFrame {
 		remainingGuesses = 10;
 		wrongGuesses = "";
 		
-		word = (currWord == null)? generateWord(): currWord;
+		word = generateWord();
 		
 		visible = "";
 

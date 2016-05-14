@@ -11,6 +11,7 @@ import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Random;
@@ -41,6 +42,7 @@ public class Main {
 	private static JLabel statusLabel;
 	private static int diff;
 	private static int file;
+	private static int numSongs;
 	private static String word;
 
 	static class MusicThread extends Thread {
@@ -70,19 +72,20 @@ public class Main {
 			isPlaying = true;
 			clip.loop(-1);
 		}
-		
-		public void setMusic(){
-			try{if(clip.isOpen()){
-				clip.stop();
-				clip.drain();
-				clip.close();
-			}
-			FileInputStream fs = new FileInputStream("Resources/music" + file + ".wav");
-			BufferedInputStream buffered = new BufferedInputStream(fs);
-			AudioInputStream inputStream = AudioSystem.getAudioInputStream(buffered);
-			clip.open(inputStream);
-			clip.loop(-1);
-			}catch(Exception e){
+
+		public void setMusic() {
+			try {
+				if (clip.isOpen()) {
+					clip.stop();
+					clip.drain();
+					clip.close();
+				}
+				FileInputStream fs = new FileInputStream("Resources/music" + file + ".wav");
+				BufferedInputStream buffered = new BufferedInputStream(fs);
+				AudioInputStream inputStream = AudioSystem.getAudioInputStream(buffered);
+				clip.open(inputStream);
+				clip.loop(-1);
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -98,6 +101,7 @@ public class Main {
 		statusLabel = new JLabel();
 		prevFrame = p;
 		currFrame = f;
+		numSongs();
 		updateFrame();
 	}
 
@@ -113,9 +117,7 @@ public class Main {
 			f = new MainMenu();
 			break;
 		case "G":
-			f = new Game(diff, word);
-			Game g = (Game) f;
-			word = g.getWord();
+			f = new Game(diff);
 			break;
 		case "O":
 			f = new Options();
@@ -133,12 +135,15 @@ public class Main {
 				}
 			});
 		}
-		
+
 		System.out.println("hit2");
 		prevFrame = currFrame;
 		JPanel mute = new JPanel();
 		mute.setLayout(new BoxLayout(mute, BoxLayout.X_AXIS));
 		mute.setOpaque(false);
+		/*if(currFrame.getTitle().equals("Hangman")){
+			newButton("New game", mute, currFrame, Component.RIGHT_ALIGNMENT, 16);
+		}*/
 		mute.add(Box.createHorizontalGlue());
 		newButton("Mute music", mute, currFrame, Component.RIGHT_ALIGNMENT, 16);
 		addStatus(currFrame);
@@ -178,17 +183,21 @@ public class Main {
 		status = "Song selected: " + getMusicFile() + " | Music: " + ((musicStatus()) ? "On" : "Off");
 		if (f instanceof Game) {
 			Game g = (Game) f;
-			status = "Difficulty: " + g.diffString() + " | "+status;
+			status = "Difficulty: " + g.diffString() + " | " + status;
 		}
 		System.out.println(status);
 		statusLabel.setText(status);
 		statusBar.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		statusBar.add(statusLabel);
-		f.add(statusBar,BorderLayout.SOUTH);
+		f.add(statusBar, BorderLayout.SOUTH);
+	}
+
+	public static void updateBar() {
+		statusLabel.repaint();
 	}
 	
-	public static void updateBar(){
-		statusLabel.repaint();
+	public static void newGame(){
+		currFrame.setTitle("");
 	}
 
 	public static void setLoc(String newLoc) {
@@ -199,10 +208,21 @@ public class Main {
 		diff = newDiff;
 	}
 
+	public static void numSongs() {
+		File resources = new File("Resources");
+		int counter = 0;
+		for (File f : resources.listFiles()) {
+			if (f.getName().endsWith(".wav")) {
+				counter++;
+			}
+		}
+		numSongs = counter;
+	}
+
 	public static void setMusic(boolean a, boolean b) {
 		int newFile = file;
 		while (newFile == file) {
-			newFile = Math.abs(new Random().nextInt() % 2);
+			newFile = Math.abs(new Random().nextInt() % numSongs);
 		}
 		if (a) {
 			if (b) {
@@ -215,6 +235,7 @@ public class Main {
 		file = newFile;
 		musicThread.setMusic();
 	}
+	
 
 	public static int getMusicFile() {
 		return file;

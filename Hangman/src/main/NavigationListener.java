@@ -10,9 +10,10 @@ import javax.swing.JMenuItem;
 public class NavigationListener implements ActionListener {
 
 	private JFrame currFrame;
-	private boolean isPlaying = true;
+	private boolean isPlaying;
 
 	public NavigationListener(JFrame currFrame) {
+		isPlaying = Main.musicStatus();
 		this.currFrame = currFrame;
 	}
 
@@ -54,6 +55,12 @@ public class NavigationListener implements ActionListener {
 				case "Return to Main Menu":
 					Main.setDiff(-1);
 					Main.setLoc("M");
+					break;
+				}
+			}else if(currFrame instanceof Game){
+				switch(button.getText()){
+				case "New Game":
+					Main.newGame();
 					break;
 				}
 			}
